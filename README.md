@@ -2,6 +2,8 @@
 
 This repository contains temperatures available as JSON files.
 
+See the stats [here](view/).
+
 ## Folders structure
 
 The temperatures are currently in the `data` folder.
