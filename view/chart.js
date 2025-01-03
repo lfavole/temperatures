@@ -6,13 +6,17 @@ function getImageForWeather(data, i) {
     return img;
 }
 
-async function displayTemperatures(data) {
+async function clearTemperatures() {
     const container = document.getElementById('temperatures-chart');
     // Remove the previous canvas if it exists
     const oldCanvas = container.querySelector('canvas');
     if (oldCanvas) {
         oldCanvas.remove();
     }
+}
+
+async function displayTemperatures(data) {
+    const container = document.getElementById('temperatures-chart');
     const canvas = document.createElement('canvas');
     container.appendChild(canvas);
     // https://stackoverflow.com/a/63913674

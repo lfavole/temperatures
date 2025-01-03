@@ -24,8 +24,12 @@ function formatTemperature(number) {
     return new Intl.NumberFormat('fr-FR').format(number) + ' °C';
 }
 async function fetchData() {
+    // Clear the old temperatures
+    await clearTemperatures();
+
     const loader = document.querySelector('.loader');
     loader.classList.add('loading');
+    loader.textContent = '';
 
     // Get the year in the location hash
     const usp = new URLSearchParams(location.hash.slice(1));

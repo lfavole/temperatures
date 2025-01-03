@@ -1,11 +1,16 @@
-async function displayTemperatures(data) {
-    // Create the table
+async function clearTemperatures() {
+    // Get the table
     const table = document.getElementById('temperatures-table');
     // Remove the old tbody if it exists
     const oldTbody = table.querySelector('tbody');
     if (oldTbody) {
         oldTbody.remove();
     }
+}
+
+async function displayTemperatures(data) {
+    // Get the table
+    const table = document.getElementById('temperatures-table');
     // Create the table body
     const tbody = document.createElement('tbody');
     data.sort((a, b) => a.date.localeCompare(b.date));
