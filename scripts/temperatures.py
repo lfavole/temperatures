@@ -162,6 +162,16 @@ class Folder:
                 for item in data:
                     yield Temperature.load_from_json(item)
 
+    def get_missing_temperatures(self):
+        """Returns the missing temperatures in the folder."""
+        temperatures = list(self.get_temperatures(BASE_DIR))
+        temperatures.sort(key=lambda x: x.date)
+        start = temperatures[0].date
+        end = dt.date.today()
+        for date in (start + dt.timedelta(days=i) for i in range((end - start).days + 1)):
+            if not any(temperature.date == date for temperature in temperatures):
+                yield date
+
 
 if __name__ == "__main__":
     folder = Folder()
