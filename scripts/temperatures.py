@@ -171,8 +171,3 @@ class Folder:
         for date in (start + dt.timedelta(days=i) for i in range((end - start).days + 1)):
             if not any(temperature.date == date for temperature in temperatures):
                 yield date
-
-
-if __name__ == "__main__":
-    folder = Folder()
-    folder.check_temperatures()
