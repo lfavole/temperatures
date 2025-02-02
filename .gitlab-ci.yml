@@ -1,0 +1,39 @@
+variables:
+  UV_VERSION: 0.5
+  PYTHON_VERSION: 3.12
+  BASE_LAYER: bookworm-slim
+  UV_LINK_MODE: copy
+
+.base:
+  image: ghcr.io/astral-sh/uv:$UV_VERSION-python$PYTHON_VERSION-$BASE_LAYER
+  variables:
+    UV_CACHE_DIR: .uv-cache
+  cache:
+    - key:
+        files:
+          - uv.lock
+      paths:
+        - $UV_CACHE_DIR
+  before_script:
+    - uv pip install --system black flake8 isort pylint
+    - uv cache prune --ci
+
+black:
+  extends: .base
+  script:
+    - black . --check
+
+flake8:
+  extends: .base
+  script:
+    - flake8 .
+
+isort:
+  extends: .base
+  script:
+    - isort . --check
+
+pylint:
+  extends: .base
+  script:
+    - pylint . --evaluation "0 if fatal else max(0, 10 - error - warning)"
