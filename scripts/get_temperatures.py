@@ -1,3 +1,5 @@
+"""Fetch temperatures from a Google Sheets document and add them in the `data` folder."""
+
 import csv
 import datetime as dt
 import os
@@ -22,6 +24,7 @@ weathers = {
 
 if __name__ == "__main__":
     print("Downloading file... ", end="")
+
     with urllib.request.urlopen(URL) as response:
         data = response.read()
     print("OK")

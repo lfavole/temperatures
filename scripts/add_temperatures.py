@@ -1,22 +1,60 @@
+"""Prompt the user to add temperatures for missing days."""
+
+import datetime as dt
+
 from temperatures import Folder, Temperature
+
+
+def is_day_missing(folder: Folder, date: dt.date) -> bool:
+    """Return whether the given day is missing in the temperature files."""
+    return date < dt.date.today() and any(date == temperature for temperature in folder.get_missing_temperatures())
+
 
 if __name__ == "__main__":
     folder = Folder()
+    try:
+        day = next(folder.get_missing_temperatures())
+    except StopIteration:
+        print("No missing temperatures. You can close the program.")
+        day = None
+
     while True:
-        try:
-            day = next(folder.get_missing_temperatures())
-        except StopIteration:
-            print("No missing temperatures")
-            break
+        if day is None:
+            while True:
+                day = dt.date.fromisoformat(input("Day [YYYY-MM-DD]: ").strip())
+                if not is_day_missing(folder, day):
+                    print("Day already has a temperature. Please try again.")
+                    continue
+                break
+        else:
+            while not is_day_missing(folder, day):
+                day += dt.timedelta(days=1)
+                if day > dt.date.today():
+                    break
+            if day > dt.date.today():
+                try:
+                    day = next(folder.get_missing_temperatures())
+                except StopIteration:
+                    print("No missing temperatures. You can close the program.")
+                    day = None
+                    continue
 
         print(f"Adding temperature for {day}:")
 
+        temp = None
         while True:
             try:
-                temp = float(input("Temperature: ").strip().replace(",", "."))
+                val = input("Temperature: ").strip().replace(",", ".")
+                if val == "change":
+                    break
+                temp = float(val)
                 break
             except ValueError:
                 print("Invalid temperature. Please try again.")
+
+        if temp is None:
+            day = None
+            continue
 
         while True:
             weather = input("Weather [sunny]: ").lower().strip().replace(" ", "_") or "sunny"
