@@ -14,8 +14,19 @@ ruff:
           - uv.lock
       paths:
         - $UV_CACHE_DIR
-  before_script:
+  script:
     - uv pip install --system ruff
     - uv cache prune --ci
     - ruff check --output-format gitlab
     - ruff format --check
+
+pages:
+  image: alpine:latest
+  script:
+    - mkdir -p public
+    - find . -mindepth 1 -maxdepth 1 ! -name public -exec cp -r {} public/ \;
+  artifacts:
+    paths:
+      - public/
+  rules:
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
